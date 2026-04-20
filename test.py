@@ -10,7 +10,6 @@ def halaman_utama():
 @app.route('/produk')
 def halaman_produk():
     return render_template('produk.html')
-
-# Pastikan 'if' menggunakan huruf kecil
+  
 if __name__ == '__main__':
     app.run(debug=True)
