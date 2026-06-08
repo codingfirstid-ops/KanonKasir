@@ -1,0 +1,78 @@
+<!-- templates/produk.html -->
+<!DOCTYPE html>
+<html lang='id'>
+<head>
+    <meta charset='UTF-8'>
+    <title>Daftar Produk</title>
+    <style>
+        body { font-family: Arial; background: #f0f4f8; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white;
+                     padding: 30px; border-radius: 12px; }
+        h1 { color: #1B5E8C; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #2E75B6; color: white; padding: 12px; text-align: left; }
+        td { padding: 10px 12px; border-bottom: 1px solid #eee; }
+        tr:hover { background: #f5f8ff; }
+        .btn { background: #2E75B6; color: white; padding: 8px 16px;
+               border: none; border-radius: 6px; text-decoration: none;
+               display: inline-block; margin-bottom: 15px; }
+        .badge-stok { background: #e8f5e9; color: #2e7d32;
+                      padding: 3px 8px; border-radius: 12px; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <h1>📦 Daftar Produk</h1>
+
+
+        <!-- Flash messages (notifikasi) -->
+        {% if get_flashed_messages is defined %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            {% if category=="success" %}
+            <div style='padding:10px; background:#d4edda; border-radius:6px; margin-bottom:15px;'>
+                {{ message }}
+            </div>
+            {% else %}
+            <div style='padding:10px; background:#f8d7da; border-radius:6px; margin-bottom:15px;'>
+                {{ message }}
+            </div>
+            {% endif %}
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+        {% endif %}
+
+
+        <a href='/produk/tambah' class='btn'>+ Tambah Produk</a>
+
+
+        <!-- Tabel produk dari database -->
+        {% if produk_list %}
+        <table>
+            <tr>
+                <th>No</th>
+                <th>Nama Produk</th>
+                <th>Harga</th>
+                <th>Stok</th>
+            </tr>
+            {% for p in produk_list %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ p.nama }}</td>
+                <td>Rp {{ '{:,}'.format(p.harga).replace(',', '.') }}</td>
+                <td><span class='badge-stok'>{{ p.stok }} pcs</span></td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p style='color: #888; text-align: center; margin-top: 40px;'>
+            Belum ada produk. Tambahkan produk pertamamu!
+        </p>
+        {% endif %}
+    </div>
+</body>
+</html>
+
+

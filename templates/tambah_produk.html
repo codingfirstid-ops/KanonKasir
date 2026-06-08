@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang='id'>
+<head>
+    <meta charset='UTF-8'>
+    <title>Tambah Produk</title>
+    <style>
+        body { font-family: Arial; background: #f0f4f8; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: white;
+                     padding: 30px; border-radius: 12px; }
+        label { display: block; margin: 15px 0 5px; font-weight: bold; color: #333; }
+        input { width: 100%; padding: 10px; border: 2px solid #ddd;
+                border-radius: 6px; font-size: 16px; box-sizing: border-box; }
+        input:focus { border-color: #2E75B6; outline: none; }
+        .btn-simpan { width: 100%; background: #2E75B6; color: white;
+                      padding: 12px; border: none; border-radius: 6px;
+                      font-size: 16px; cursor: pointer; margin-top: 20px; }
+        .btn-simpan:hover { background: #1B5E8C; }
+        .back-link { color: #2E75B6; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <a href='/produk' class='back-link'>← Kembali ke Daftar Produk</a>
+        <h1 style='color:#1B5E8C; margin-top:15px;'>➕ Tambah Produk</h1>
+
+
+
+        <form action='/produk/tambah' method='post'>
+            <label for='nama'>Nama Produk</label>
+            <input type='text' id='nama' name='nama' placeholder='Contoh: Coklat Silverqueen' required>
+
+
+            <label for='harga'>Harga Satuan (Rp)</label>
+            <input type='number' id='harga' name='harga' placeholder='Contoh: 5000' min='1' required>
+
+
+            <label for='stok'>Stok Awal</label>
+            <input type='number' id='stok' name='stok' placeholder='Contoh: 50' min='0' value='0'>
+
+
+            <button type='submit' class='btn-simpan'>💾 Simpan Produk</button>
+        </form>
+    </div>
+</body>
+</html>
+
