@@ -149,3 +149,58 @@ def get_total_penjualan_hari_ini():
     conn.close()
     return result
 
+# Tambahkan di database.py
+
+
+def get_dashboard_data():
+    """Ambil semua data yang dibutuhkan dashboard"""
+    conn = get_db()
+
+
+    # Total transaksi & penjualan hari ini
+    hari_ini = conn.execute('''
+        SELECT
+            COUNT(*)    AS jumlah_transaksi,
+            COALESCE(SUM(total), 0) AS total_penjualan
+        FROM transaksi
+        WHERE DATE(tanggal) = DATE('now', 'localtime')
+    ''').fetchone()
+
+
+    # 5 transaksi terakhir
+    riwayat = conn.execute('''
+        SELECT id, tanggal, nama_pembeli, total
+        FROM transaksi
+        ORDER BY tanggal DESC
+        LIMIT 5
+    ''').fetchall()
+
+
+    # Produk terlaris (berdasarkan jumlah terjual)
+    terlaris = conn.execute('''
+        SELECT nama_produk,
+               SUM(jumlah)   AS total_terjual,
+               SUM(subtotal) AS total_pendapatan
+        FROM detail_transaksi
+        GROUP BY nama_produk
+        ORDER BY total_terjual DESC
+        LIMIT 5
+    ''').fetchall()
+
+
+    # Total semua transaksi (keseluruhan)
+    semua = conn.execute('''
+        SELECT COUNT(*) AS total_tx, COALESCE(SUM(total),0) AS total_omzet
+        FROM transaksi
+    ''').fetchone()
+
+
+    conn.close()
+    return {
+        'hari_ini':  hari_ini,
+        'riwayat':   riwayat,
+        'terlaris':  terlaris,
+        'semua':     semua
+    }
+
+

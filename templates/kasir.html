@@ -1,0 +1,97 @@
+<!-- templates/kasir.html -->
+<!DOCTYPE html>
+<html lang='id'>
+<head>
+    <meta charset='UTF-8'><title>Kasir</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial; background: #f0f4f8; margin: 0; padding: 20px; }
+        .layout { display: flex; gap: 20px; max-width: 1100px; margin: 0 auto; }
+        .panel { background: white; border-radius: 12px; padding: 24px; }
+        .produk-panel { flex: 1; }
+        .keranjang-panel { width: 360px; }
+        h2 { color: #1B5E8C; margin-top: 0; }
+        .produk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .produk-card { border: 2px solid #e8eef5; border-radius: 8px; padding: 14px;
+                       transition: border-color 0.2s; }
+        .produk-card:hover { border-color: #2E75B6; }
+        .produk-nama { font-weight: bold; margin-bottom: 4px; }
+        .produk-harga { color: #2E75B6; font-size: 15px; margin-bottom: 10px; }
+        .form-qty { display: flex; gap: 6px; }
+        .form-qty input { width: 60px; padding: 6px; border: 1px solid #ddd; border-radius: 4px; }
+        .btn-tambah { background: #2E75B6; color: white; border: none;
+                      padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .keranjang-item { display: flex; justify-content: space-between;
+                          padding: 8px 0; border-bottom: 1px solid #eee; }
+        .total-box { background: #1B5E8C; color: white; padding: 14px;
+                     border-radius: 8px; margin: 16px 0; text-align: center; }
+        .total-box .angka { font-size: 24px; font-weight: bold; }
+        .btn-bayar { width: 100%; background: #27ae60; color: white; padding: 12px;
+                     border: none; border-radius: 6px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div style='max-width:1100px;margin:0 auto;'>
+        <h1 style='color:#1B5E8C;'>🛒 Kasir Mini</h1>
+    </div>
+    <div class='layout'>
+        <!-- Panel Kiri: Daftar Produk -->
+        <div class='panel produk-panel'>
+            <h2>📦 Pilih Produk</h2>
+            <div class='produk-grid'>
+            {% for p in produk_list %}
+            <div class='produk-card'>
+                <div class='produk-nama'>{{ p.nama }}</div>
+                <div class='produk-harga'>Rp {{ '{:,}'.format(p.harga).replace(',','.') }}</div>
+                <form action='/kasir/tambah' method='post' class='form-qty'>
+                    <input type='hidden' name='produk_id' value='{{ p.id }}'>
+                    <input type='number' name='jumlah' value='1' min='1'>
+                    <button type='submit' class='btn-tambah'>+ Tambah</button>
+                </form>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+
+
+        <!-- Panel Kanan: Keranjang -->
+        <div class='panel keranjang-panel'>
+            <h2>🧺 Keranjang</h2>
+            {% if keranjang %}
+                {% for item in keranjang %}
+                <div class='keranjang-item'>
+                    <div>
+                        <strong>{{ item.nama }}</strong>
+                        <br><small>{{ item.jumlah }} x Rp {{ '{:,}'.format(item.harga).replace(',','.') }}</small>
+                    </div>
+                    <div style='text-align:right'>
+                        <div>Rp {{ '{:,}'.format(item.subtotal).replace(',','.') }}</div>
+                        <a href='/kasir/hapus/{{ item.produk_id }}' style='color:red;font-size:12px;'>hapus</a>
+                    </div>
+                </div>
+                {% endfor %}
+
+
+                <div class='total-box'>
+                    <div>Total Belanja</div>
+                    <div class='angka'>Rp {{ '{:,}'.format(total).replace(',','.') }}</div>
+                </div>
+
+
+                <form action='/kasir/bayar' method='post'>
+                    <input type='text' name='nama_pembeli' placeholder='Nama pembeli'
+                           style='width:100%;padding:8px;margin-bottom:8px;border:1px solid #ddd;border-radius:4px;' required>
+                    <input type='number' name='bayar' placeholder='Jumlah bayar (Rp)'
+                           style='width:100%;padding:8px;margin-bottom:12px;border:1px solid #ddd;border-radius:4px;' required>
+                    <button type='submit' class='btn-bayar'>💳 Proses Pembayaran</button>
+                </form>
+            {% else %}
+                <p style='color:#aaa;text-align:center;margin-top:40px;'>
+                    Keranjang kosong.<br>Pilih produk di sebelah kiri!
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
+
